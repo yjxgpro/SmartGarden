@@ -1,18 +1,12 @@
 #include <iostream>
-#include <chrono>
-#include <thread>
 #include <wiringPi.h>
 
 #define PIN_0 0
-
 using namespace std;
-
-
 
 int main(int argc, char **argv)
 {
 	wiringPiSetup();
-	
 	pinMode(PIN_0, INPUT);
 	
 	while(1)
@@ -25,7 +19,6 @@ int main(int argc, char **argv)
 			}
 		delay(2000);
 		}
-	
 	
 	return 0;
 }
