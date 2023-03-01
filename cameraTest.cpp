@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    // ´ò¿ªÉãÏñÍ·
+    // æ‰“å¼€æ‘„åƒå¤´
     cv::VideoCapture cam(0);
     if (!cam.isOpened()) {
         cout << "cam open failed!" << endl;
@@ -36,9 +36,9 @@ int main(int argc, char* argv[]) {
     std::vector<cv::Vec4i>::iterator itc_hierarchy = hierarchy.begin();
 
     for (;;) {
-        cam.read(img); // ¶ÁÖ¡
+        cam.read(img); // è¯»å¸§
         if (img.empty()) break;
-        imshow("cam", img); // ÏÔÊ¾Ã¿Ò»Ö¡
+        imshow("cam", img); // æ˜¾ç¤ºæ¯ä¸€å¸§
 
         pMOG2->apply(img, bsmMOG2);
 
@@ -52,12 +52,12 @@ int main(int argc, char* argv[]) {
             //cv::morphologyEx(bsmMOG2, bsmMOG2, cv::MORPH_CLOSE, kernel);
             for (int i = 0; i < contours.size(); ++i)
             {
-                //ÅĞ¶ÏÂÖÀª´óĞ¡
+                //åˆ¤æ–­è½®å»“å¤§å°
                 if (cv::contourArea(contours[i]) < 600 && cv::contourArea(contours[i]) > 50)
                 {
-                    //»ñÈ¡ÂÖÀª¾ØĞÎ
+                    //è·å–è½®å»“çŸ©å½¢
                     cv::Rect rect = cv::boundingRect(contours[i]);
-                    //ÔÚ¾ØĞÎµÄ×óÉÏ½ÇµãÊä³öÎÄ×Ö
+                    //åœ¨çŸ©å½¢çš„å·¦ä¸Šè§’ç‚¹è¾“å‡ºæ–‡å­—
                     //cv::putText(bsmMOG2, "pest", cv::Point(rect.x, rect.y),
                     //cv::FONT_HERSHEY_PLAIN, 2, cv::Scalar(255, 255, 255));
                     itc = contours.begin();
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
         //Sleep(50);
         cv::imshow("MOG2", bsmMOG2);
 
-        if (cv::waitKey(5) == 'q') break; // ¼üÈëqÍ£Ö¹
+        if (cv::waitKey(5) == 'q') break; // é”®å…¥qåœæ­¢
     }
 
     return 0;
