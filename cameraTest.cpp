@@ -1,7 +1,6 @@
 #include<opencv2/opencv.hpp>
 #include<cstdio>
 #include<iostream>
-#include<windows.h>
 #include<opencv2/imgproc/types_c.h>
 
 //using namespace cv;
