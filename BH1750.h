@@ -14,6 +14,7 @@ static const char could_not_open_i2c[] = "Could not open I2C.\n";
 
 #define BH1750_ADDR 0x23
 #define BH1750_DEFAULT_I2C_BUS 1
+#define BH1750_Register_ADDR 0
 #define I2C_slkgpio 1
 #define I2C_sdagpio 2
 #define LED_control1 3
@@ -49,7 +50,7 @@ struct BH1750DeviceSettings
 class BH1750
 {
     public:
-	BH1750(BH1750DeviceSettings bh1750deviceSettings = BH1750DeviceSettings())  //有初始值直接 = BH1750DeviceSettings(),用户也可以自己改？
+	BH1750(BH1750DeviceSettings bh1750deviceSettings = BH1750DeviceSettings());  //有初始值直接 = BH1750DeviceSettings(),用户也可以自己改？
 
 	//! \brief Starts thread for light, checks its not already running
     void start();
@@ -72,11 +73,17 @@ class BH1750
 		stop();
 	 }
 
+	uint16_t setworkmode(uint16_t userdata)
+	 {
+		currentworkmode = userdata;
+		return currentworkmode;
+	 }
+
 	private:
     std::thread* USThread = NULL;          // 线程 
 	BH1750DeviceSettings device;
+	uint16_t currentworkmode;
 	// current BH1750workmode continute_resoulution 11x
-	BH1750_workmode currentmode = continue_r1;
 	BH1750callback* BH1750Callback = nullptr;
 	uint16_t BH1750twobytes=0;  //2 bytes
 	float real_lightvalue=0;
@@ -84,10 +91,10 @@ class BH1750
 	bool LEDTri = false;                    // 根据计算结果决定是否打开开关
     
 	void BH1750initgpio();
-	void BH1750WritePoweron(uint8_t subAddress);
-	void BH1750WriteWorkMode(uint8_t subAddress, uint8_t workmode);
-	uint8_t BH1750RecData(uint8_t subAddress, uint8_t * dest, uint8_t count);
-	float lightcalc(float*buf);     //在设定分辨率下计算光照强度
+	void BH1750WritePoweron();
+	void BH1750WriteWorkMode(uint8_t workmode);
+	uint8_t BH1750RecData(uint8_t * dest, uint8_t count);
+	float lightcal(float*buf);     //在设定分辨率下计算光照强度
 	void BH1750dataready();
 
 		// I2CwriteByte() -- Write a byte out of I2C to a register in the device
@@ -114,30 +121,12 @@ class BH1750
 	// Output: No value is returned by the function, but the registers read are
 	//         all stored in the *dest array given.
 	uint8_t I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_t count);
-	}
+};
 
 
 class BH1750callback {
 public:
         // Called after a sample has arrived.
-        virtual void hasSample(char * bufdata) = 0;
+        virtual void hasSample(float * bufdata) = 0;
 };
 
-class LEDcallback : public BH1750callback
-{
-	virtual void hasSample(float lightvalue) {
-		//根据不同的光照强度，PWM输出
-		//test 就可以使用
-		float lightneed;
-		if(lightvalue>EnoughLight) return;
-		else
-		{
-		lightneed = EnoughLight - lightvalue;
-		gpioSetMode(LED_control1, PI_OUTPUT);  //  pigpio 控制占空比
-        gpioSetMode(LED_control2, PI_OUTPUT); //  
-		lightvalue=0;
-		lightneed=0;
-		}
-		// todo 
-	}
-};
