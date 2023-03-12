@@ -47,6 +47,12 @@ struct BH1750DeviceSettings
 	uint8_t bh1750_i2c_sdagpio = I2C_sdagpio;
 };
 
+class BH1750callback {
+public:
+        // Called after a sample has arrived.
+        virtual void hasSample(float bufdata) = 0;
+};
+
 class BH1750
 {
     public:
@@ -73,29 +79,34 @@ class BH1750
 		stop();
 	 }
 
-	uint16_t setworkmode(uint16_t userdata)
+	void setworkmode(uint16_t userworkmode)
 	 {
-		currentworkmode = userdata;
-		return currentworkmode;
+		BH1750::currentworkmode = userworkmode;
 	 }
+
+	//  void getworkmode()
+	//  {
+
+	//  }
 
 	private:
     std::thread* USThread = NULL;          // 线程 
 	BH1750DeviceSettings device;
-	uint16_t currentworkmode;
+	//static uint16_t currentworkmode;
+	 uint16_t currentworkmode;
 	// current BH1750workmode continute_resoulution 11x
 	BH1750callback* BH1750Callback = nullptr;
-	uint16_t BH1750twobytes=0;  //2 bytes
-	float real_lightvalue=0;
-	int8_t BH1750_buf[2]={0};                   // BH1750读取的数据, 之后可能传给QT?,先放这里
+	//static float real_lightvalue;
+	 float real_lightvalue;
+	uint32_t BH1750_buf[2]={0};                   // BH1750读取的数据, 之后可能传给QT?,先放这里
 	bool LEDTri = false;                    // 根据计算结果决定是否打开开关
     
 	void BH1750initgpio();
 	void BH1750WritePoweron();
 	void BH1750WriteWorkMode(uint8_t workmode);
-	uint8_t BH1750RecData(uint8_t * dest, uint8_t count);
-	float lightcal(float*buf);     //在设定分辨率下计算光照强度
-	void BH1750dataready();
+	void BH1750RecData(uint8_t * dest, uint8_t count);
+	float lightcal(uint32_t* buf);     //在设定分辨率下计算光照强度
+	void BH1750dataready(BH1750 *BH1750);
 
 		// I2CwriteByte() -- Write a byte out of I2C to a register in the device
 	// Input:
@@ -123,10 +134,7 @@ class BH1750
 	uint8_t I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest, uint8_t count);
 };
 
+// uint16_t BH1750:: currentworkmode = continue_r1;
+// float BH1750:: real_lightvalue = 0;
 
-class BH1750callback {
-public:
-        // Called after a sample has arrived.
-        virtual void hasSample(float * bufdata) = 0;
-};
 

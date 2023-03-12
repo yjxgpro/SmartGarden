@@ -26,11 +26,9 @@ BH1750::BH1750(BH1750DeviceSettings bh1750deviceSettings)
 
 void BH1750::run(BH1750 *BH1750)     //这边有个bug 好像每次今来都要上电 增加耗时？
 {
-  uint8_t temp;
 // 发送地址寻址
-  BH1750WritePoweron();     // power on   //先写入一个死值，不确定寄存器地址address
-  BH1750WriteWorkMode(currentworkmode);  //set workmode  //理论上应该用户选择
-  BH1750dataready();
+
+  BH1750->BH1750dataready(BH1750);
 }
 
 void BH1750::start()
@@ -42,7 +40,7 @@ void BH1750::start()
     }
 	else
     {
-        USThread = new std::thread(run, this);//run作线程入口，this作传入参数
+        USThread = new std::thread(BH1750::run, this);//run作线程入口，this作传入参数
 	} 
 }
 
@@ -80,46 +78,45 @@ void BH1750::BH1750WriteWorkMode(uint8_t workmode)
 	I2CwriteByte(BH1750_ADDR,BH1750_Register_ADDR,workmode);
 }
 
-uint8_t BH1750::BH1750RecData(uint8_t * dest, uint8_t count)
+void BH1750::BH1750RecData(uint8_t * dest, uint8_t count)
 {
      I2CreadBytes(BH1750_ADDR, BH1750_Register_ADDR, dest, count);  //count 是2吗？2指寄存器数量，BH1750只有一个
      BH1750_buf[0] = dest[0]&0x0f;  //数据处理， 但还不确定第一字节是高位还是第二字节是高位
      BH1750_buf[1] = dest[1]&0xf0;
 }
 
-float BH1750::lightcal(float*buf)
+float BH1750::lightcal(uint32_t*buf)
 {
 	float flight;
-    switch (device.currentmode)
+    switch (currentworkmode)
     {
     case continue_r1:
         flight=(buf[0]*256+buf[1])*1.0/1.2;
         printf("%.2f",flight);
-		return flight;
         break;
     case continue_r2:
         flight=(buf[0]*256+buf[1])*0.5/1.2;
         printf("%.2f",flight);
-		return flight;
         break;
     case continue_r3:
         flight=(buf[0]*256+buf[1])*4.0/1.2;
         printf("%.2f",flight);
-		return flight;
         break;
     default:
-	std::cout << "donnot get correct light intensity."<< endl;
+	std::cout << "donnot get correct light intensity.";
         break;
     }
-	flight=0;
+	return flight;
 }
 
-void BH1750::BH1750dataready()
+void BH1750::BH1750dataready(BH1750 *BH175)
 {
     uint8_t temp[32];
+ BH1750->BH1750WritePoweron();     // power on   //先写入一个死值，不确定寄存器地址address
+  BH1750->BH1750WriteWorkMode(currentworkmode);  //set workmode  //理论上应该用户选择
    if (!BH1750Callback) return;
   BH1750RecData(temp,2);       // get the data two bytes
-  real_lightvalue=lightcal(&BH1750_buf);  // get real light inensity
+  real_lightvalue=lightcal(BH1750_buf);  // get real light inensity
     BH1750Callback->hasSample(real_lightvalue);
 }
  
@@ -167,7 +164,7 @@ uint8_t BH1750::I2CreadBytes(uint8_t address, uint8_t subAddress, uint8_t * dest
 #endif
 		throw could_not_open_i2c;
 	}
-	int ret = i2cReadWordData(fd,subAddress,(char*)dest,count);
+	int ret = i2cReadI2CBlockData(fd,subAddress,(char*)dest,count);
 	i2cClose(fd);
 	if (ret != count) {
 		throw "word read didn't work";
