@@ -4,18 +4,26 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <thread>
+#include <iostream>
+using namespace std;
 
-class SoilSensor {
-public:
+class SoilSensor 
+{
+    private:
+    int m_gpioPin;
+    thread* soil_Thread = NULL;
+    
+    public:
     SoilSensor(int gpioPin);
     ~SoilSensor();
 
-    void start();
+    static void start(SoilSensor* soilsensor);
+    void soilthread_run();
+    void soilthread_stop();
 
     static void gpioISR(int gpio, int level, uint32_t tick, void *userData);
 
-private:
-    int m_gpioPin;
+
 };
 
 #endif

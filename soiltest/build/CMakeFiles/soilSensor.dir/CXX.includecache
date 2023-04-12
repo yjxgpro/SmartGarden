@@ -13,10 +13,14 @@ stdint.h
 -
 thread
 -
+iostream
+-
 
 /home/pi/soiltest/src/main.cpp
 soilSensor.h
 /home/pi/soiltest/src/soilSensor.h
+chrono
+-
 
 /home/pi/soiltest/src/soilSensor.cpp
 iostream
