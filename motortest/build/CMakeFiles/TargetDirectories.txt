@@ -1,0 +1,3 @@
+/home/pi/motortest/build/CMakeFiles/rebuild_cache.dir
+/home/pi/motortest/build/CMakeFiles/edit_cache.dir
+/home/pi/motortest/build/CMakeFiles/l298n_test.dir
