@@ -9,9 +9,11 @@ using namespace std;
 class Servo {
 
 public:
-    
-    int x = n1;
-    int y = n2;
+    Servo(){}
+    thread thread1;
+    thread thread2;
+    //int x = n1;
+    //int y = n2;
     int pwmPin1 = 0;
     int pwmPin2 = 2;
     int* theta(int _coordinate[2]) {
@@ -59,14 +61,14 @@ public:
             delayMicroseconds(20000 - 1500);
         }
     }
-    void static servoAct1(double x, double y) {
+    void servoAct1(double x, double y) {
         int coordinates[2];
         coordinates[0] = x;
         coordinates[1] = y;
         int* anglePtr = theta(coordinates);
-        digitalWrite(0, HIGH);
+        digitalWrite(pwmPin1, HIGH);
         delayMicroseconds(pwmPeriod(anglePtr[0]));
-        digitalWrite(0, LOW);
+        digitalWrite(pwmPin1, LOW);
         delayMicroseconds(20000 - pwmPeriod(anglePtr[0]));
     }
 
@@ -75,25 +77,21 @@ public:
         coordinates[0] = x;
         coordinates[1] = y;
         int* anglePtr = theta(coordinates);
-        digitalWrite(2, HIGH);
+        digitalWrite(pwmPin2, HIGH);
         delayMicroseconds(pwmPeriod(anglePtr[1]));
-        digitalWrite(2, LOW);
+        digitalWrite(pwmPin2, LOW);
         delayMicroseconds(20000 - pwmPeriod(anglePtr[1]));
     }
 
-    void servoActivate(int x,int y) {
-        
-        servoInit(0,2);
-        while (1) {
-            servoAct1(x,y)
-            //thread th1(servoAct1, k, 60-k);
-            //thread th2(servoAct2, k, 60-k);
-           
-            delay(100);
+    void start(double x, double y){
+        thread1 = thread(&Servo::servoAct1, this, x, y);
+        thread2 = thread(&Servo::servoAct2, this, x, y);
 
-        }
-        
+    }
+
+    void stop(){
+        thread1.join();
+        thread2.join();
     }
 
 };
-
