@@ -95,3 +95,23 @@ public:
     }
 
 };
+
+int main(){
+    int x;
+    int y;
+    Servo servo;
+    servo.init();
+    
+    while(1){
+        cout << "Enter coordinate x: " << endl;
+        cin >> x;
+        cout << "Enter coordinate y: " << endl;
+        cin >> y;
+        
+        servo.start(x,y);
+        servo.stop();
+        servo.init();
+    }
+    
+    return 0;
+}
