@@ -18,8 +18,8 @@ public:
 
     int* theta(int _coordinate[2]) {
 
-        int vertical = 60;
-        int horizontal = 60;
+        int vertical = 600;
+        int horizontal = 600;
         int distance = 30;
         double theta_x, theta_y;
         static int out[2];
