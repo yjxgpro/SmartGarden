@@ -109,6 +109,7 @@ int main(){
         cin >> y;
         
         servo.start(x,y);
+        delay(100);
         servo.stop();
         servo.init();
     }
