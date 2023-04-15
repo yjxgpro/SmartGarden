@@ -13,19 +13,20 @@ public:
     Servo(){}
     thread thread1;
     thread thread2;
+    int gpioPinFan = 15;
     int gpioPin1 = 17;
     int gpioPin2 = 18;
 
     int* theta(int _coordinate[2]) {
 
-        int vertical = 600;
-        int horizontal = 600;
-        int distance = 30;
+        int vertical = 100;
+        int horizontal = 100;
+        int distance = 50;
         double theta_x, theta_y;
         static int out[2];
 
-        theta_x = 90 - (atan((_coordinate[0] - 0.5 * horizontal) / distance) * 180 / PI);
-        theta_y = 90 - (atan((_coordinate[1] - 0.5 * vertical) / distance) * 180 / PI);
+        theta_x = 90 - (atan((_coordinate[0]/6 - 0.5 * horizontal) / distance) * 180 / PI);
+        theta_y = 90 - (atan((_coordinate[1]/6 - 0.5 * vertical) / distance) * 180 / PI);
         out[0] = round(theta_x);
         out[1] = round(theta_y);
 
@@ -46,6 +47,14 @@ public:
         time_sleep(0.5);
     }
 
+    void fanInit(int pin) {
+        gpioSetMode(pin, PI_OUTPUT);
+    }
+
+    void fanAct() {
+        gpioWrite(gpioPinFan, 1);
+    }
+
     void servoAct(int gpioPin, double x, double y) {
         int coordinates[2];
         coordinates[0] = x;
@@ -64,6 +73,7 @@ public:
     void stop(){
         thread1.join();
         thread2.join();
+        gpioWrite(gpioPinFan, 0);
     }
 
 };
@@ -72,19 +82,19 @@ public:
 int main(){
     int x;
     int y;
+    int k = 0;
     Servo servo;
     gpioInitialise();
     servo.servoInit(servo.gpioPin1);
     servo.servoInit(servo.gpioPin2);
+    servo.fanInit(servo.gpioPinFan);
     
-    while(1){
-        cout << "Enter coordinate x: " << endl;
-        cin >> x;
-        cout << "Enter coordinate y: " << endl;
-        cin >> y;
+    while(k<600){
         
-        servo.start(x,y);
-        time_sleep(0.1);
+        servo.start(k,600-k);
+        servo.fanAct();
+        k = k + 1;
+        //time_sleep(0.1);
         servo.stop();
     }
     
