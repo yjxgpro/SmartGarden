@@ -6,27 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/home/pi/servoTest/SmartGarden/ServoGetSample.cpp
-camera.h
-/home/pi/servoTest/SmartGarden/camera.h
-Servo_new.cpp
-/home/pi/servoTest/SmartGarden/Servo_new.cpp
-
-/home/pi/servoTest/SmartGarden/Servo_new.cpp
-iostream
--
-cmath
--
-pigpio.h
--
-thread
--
-
 /home/pi/servoTest/SmartGarden/camera.h
 opencv2/opencv.hpp
 -
 iostream
 -
+
+/home/pi/servoTest/SmartGarden/pestDetect.cpp
+camera.h
+/home/pi/servoTest/SmartGarden/camera.h
 
 /usr/local/include/opencv4/opencv2/calib3d.hpp
 opencv2/core.hpp

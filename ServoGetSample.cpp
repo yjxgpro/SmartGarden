@@ -7,6 +7,7 @@ class ServoSampleCallback : public ServoCallback {
         
         if (n1 > 0 && n2 > 0){
             servo.start(n1, n2);
+            servo.fanAct(4, 27, 22);
             servo.stop();
         }
     }

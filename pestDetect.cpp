@@ -15,7 +15,9 @@ void Camera::detect() {
     }
 
     cout << "cam open success!" << endl;
-    namedWindow("cam");
+    //namedWindow("cam");
+    //namedWindow("cam", WINDOW_NORMAL);
+    //resizeWindow("cam", 640, 480);
     Mat img;
 
     Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3), Point(-1, -1));
@@ -33,7 +35,7 @@ void Camera::detect() {
         cam.read(img);
         if (img.empty()) break;
 
-        imshow("cam", img);
+        //imshow("cam", img);
 
         pMOG2->apply(img, bsmMOG2, 0.005);
 
@@ -42,7 +44,7 @@ void Camera::detect() {
 
         findContours(bsmMOG2, contours, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
-        if (contours.size() < 5) {
+        if (contours.size() <= 2) {
             for (int i = 0; i < contours.size(); ++i) {
                 if (contourArea(contours[i]) < 600 && contourArea(contours[i]) > 10) {
                     Rect rect = boundingRect(contours[i]);
@@ -53,13 +55,15 @@ void Camera::detect() {
                         circle(bsmMOG2, pt, 2, Scalar(0, 0, 255), 2);
                         pos_x = pt.x;
                         pos_y = pt.y;
-                        sCallback->hasSample(pos_x, pos_y);
-                        pos[0] = pos_x;
-                        pos[1] = pos_y;
-                        string text_x = std::to_string(pos_x);
-                        string text_y = std::to_string(pos_y);
-                        string text = "(" + text_x + ", " + text_y + ")";
-                        putText(bsmMOG2, text, Point(pt.x + 10, pt.y + 10), FONT_HERSHEY_PLAIN, 1.5, Scalar::all(255), 1, 8, 0);
+                        if (pos_x > 20 && pos_y > 20){
+                            sCallback->hasSample(pos_x, pos_y);
+                            pos[0] = pos_x;
+                            pos[1] = pos_y;
+                            string text_x = std::to_string(pos_x);
+                            string text_y = std::to_string(pos_y);
+                            string text = "(" + text_x + ", " + text_y + ")";
+                            putText(bsmMOG2, text, Point(pt.x + 10, pt.y + 10), FONT_HERSHEY_PLAIN, 1.5, Scalar::all(255), 1, 8, 0);
+                        }
                     }
                 }
             }
