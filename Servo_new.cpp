@@ -13,6 +13,7 @@ public:
     Servo(){}
     thread thread1;
     thread thread2;
+    thread thread3;
     int gpioPinFan = 15;
     int gpioPin1 = 17;
     int gpioPin2 = 18;
@@ -47,12 +48,9 @@ public:
         time_sleep(0.5);
     }
 
-    void fanInit(int pin) {
+    void fanAct(int pin) {
         gpioSetMode(pin, PI_OUTPUT);
-    }
-
-    void fanAct() {
-        gpioWrite(gpioPinFan, 1);
+        gpioWrite(pin, 1);
     }
 
     void servoAct(int gpioPin, double x, double y) {
@@ -68,11 +66,13 @@ public:
     void start(double x, double y){
         thread1 = thread(&Servo::servoAct, this, gpioPin1, x, y);
         thread2 = thread(&Servo::servoAct, this, gpioPin2, x, y);
+        thread3 = thread(&Servo::fanAct, this, gpioPinFan);
     }
 
     void stop(){
         thread1.join();
         thread2.join();
+        thread3.join();
         gpioWrite(gpioPinFan, 0);
     }
 
@@ -87,12 +87,10 @@ int main(){
     gpioInitialise();
     servo.servoInit(servo.gpioPin1);
     servo.servoInit(servo.gpioPin2);
-    servo.fanInit(servo.gpioPinFan);
     
     while(k<600){
         
         servo.start(k,600-k);
-        servo.fanAct();
         k = k + 1;
         //time_sleep(0.1);
         servo.stop();
@@ -101,4 +99,5 @@ int main(){
     gpioTerminate();
     return 0;
 }
+
 */
