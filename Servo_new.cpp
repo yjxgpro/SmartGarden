@@ -1,3 +1,13 @@
+/* 
+    Author: Anthony Jin, 2789782J@student.gla.ac.uk
+    
+    This is the driver for the pan-tilt pest tracking platform, part of the Smart Garden project.
+    The driver maps 2-D coordinates from the camera into pitch and yaw angles, and calculates the
+    corresponding PWM period to drive the servos. It also activates the fan motor at the same time.
+    
+    Please refer to https://github.com/yjxgpro/SmartGarden for the full project and source code.
+*/
+
 #include <iostream>
 #include <cmath>
 #include <pigpio.h>
@@ -6,12 +16,6 @@
 using namespace std;
 
 #define PI 3.14159265
-
-/* 
-    This is the driver for the pan-tilt pest tracking platform, part of the Smart Garden project.
-    The driver maps 2-D coordinates from the camera into pitch and yaw angles, and calculates the
-    corresponding PWM period to drive the servos. It also activates the fan at the same time.
-*/
 
 // Driver class for two servos and a DC fan motor.
 class Servo {
@@ -29,7 +33,7 @@ public:
     int gpioPin1 = 17; // PWM control signal for yaw servo
     int gpioPin2 = 18; // PWM control signal for pitch servo
 
-    /* Member function to servo angles based on given 2-D coordinates. A few assumption are made
+    /* Member function to calculate servo angles based on given 2-D coordinates. A few assumption are made
     since the coordinates are only 2-D (depth info is missing): 
     
     1. The bug only appears on a 2-D plane 30 cm away from the pan-tilt.
