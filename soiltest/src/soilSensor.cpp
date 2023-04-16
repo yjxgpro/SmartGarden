@@ -2,9 +2,14 @@
 #include <iostream>
 #include "soilSensor.h"
 #include <pigpio.h>
+#include <unistd.h>
 using namespace std;
 
-#define ISR_TIMEOUT 1000
+#define ENA 21
+#define IN1 20
+#define IN2 16
+
+#define ISR_TIMEOUT 100000
 
 SoilSensor::SoilSensor(int gpioPin)
 {
@@ -16,19 +21,18 @@ SoilSensor::~SoilSensor()
     gpioTerminate();
 }
 
-void SoilSensor::start(SoilSensor* soilsensor)
+void SoilSensor::run(SoilSensor* soilsensor)
 {
     if (gpioInitialise() < 0)
     {
         cout << "fail" << endl;
-        return;
     }
-
+    cout << "success" << endl;
     gpioSetMode(soilsensor->m_gpioPin, PI_INPUT);
-    gpioSetISRFuncEx(soilsensor->m_gpioPin, RISING_EDGE, ISR_TIMEOUT, gpioISR, soilsensor);
+    gpioSetISRFuncEx(soilsensor->m_gpioPin, RISING_EDGE, ISR_TIMEOUT, soilcallback, soilsensor);
 }
 
-void SoilSensor::soilthread_run()
+void SoilSensor::soilthread_start()
 {
     if (soil_Thread)
     {
@@ -36,7 +40,7 @@ void SoilSensor::soilthread_run()
     }
     else
     {
-        soil_Thread = new thread(start, this);
+        soil_Thread = new thread(run, this);
     }
 }
 
@@ -50,16 +54,22 @@ void SoilSensor::soilthread_stop()
     }
 }
 
-void SoilSensor::gpioISR(int gpio, int level, uint32_t tick, void *userData)
+void SoilSensor::soilcallback(int gpio, int level, uint32_t tick, void* userData)
 {
     SoilSensor *sensor = static_cast<SoilSensor *>(userData);
+    gpioSetMode(ENA, PI_OUTPUT);
+    gpioSetMode(IN1, PI_OUTPUT);
+    gpioSetMode(IN2, PI_OUTPUT);
+    gpioWrite(ENA, 0);
+    gpioWrite(IN1, 1);
+    gpioWrite(IN2, 0);
 
     if (level == 1)
     {
-        cout << "soil is dry" << endl;
-    }
-    else
-    {
-        cout << "soil is fine" << endl;
+        sleep(1);
+        gpioWrite(ENA, 1);
+        sleep(5);
+        gpioWrite(ENA, 0);
+	    sleep(2);
     }
 }

@@ -1,5 +1,5 @@
-#ifndef SOILSENSOR_H
-#define SOILSENSOR_H
+#ifndef _SOILSENSOR_H
+#define _SOILSENSOR_H
 
 #include <stdio.h>
 #include <stdint.h>
@@ -17,11 +17,11 @@ class SoilSensor
     SoilSensor(int gpioPin);
     ~SoilSensor();
 
-    static void start(SoilSensor* soilsensor);
-    void soilthread_run();
+    static void run(SoilSensor* soilsensor);
+    void soilthread_start();
     void soilthread_stop();
 
-    static void gpioISR(int gpio, int level, uint32_t tick, void *userData);
+    static void soilcallback(int gpio, int level, uint32_t tick, void *userData);
 
 
 };
