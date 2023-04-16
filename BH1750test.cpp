@@ -1,8 +1,6 @@
-#include <errno.h>
-#include <time.h>
-#include <sys/time.h>
-#include <unistd.h>
 #include "BH1750.h"
+
+using namespace std;
 
 class LEDcallback : public BH1750callback
 {
@@ -10,25 +8,26 @@ class LEDcallback : public BH1750callback
 	 void hasSample(float lightvalue) {
 		//根据不同的光照强度，PWM输出
 		//test 就可以使用
-		float lightneed;
-		if(lightvalue>EnoughLight) return;
+		float lightneed = 0;
+		if(lightvalue>EnoughLight) 
+		std::cout<<"Enough Light"<<endl;
 		else
 		{
-		lightneed = EnoughLight - lightvalue;
-		gpioSetMode(LED_control1, PI_OUTPUT);  //  pigpio 控制占空比
-        gpioSetMode(LED_control2, PI_OUTPUT); //  
-		lightvalue=0;
-		lightneed=0;
+			std::cout<<"PWM"<<endl;
+			lightneed = EnoughLight-lightvalue;
+			int pwmValue = lightneed * pwmRange / 100;
+             gpioPWM(LEDgpio, pwmValue); // set PWM 
 		}
-		// fprintf();// todo 
 	}
 };
 
 int main(int argc, char *argv[]) {
     BH1750 bh1750test;
+	std::cout<<"BH1750 OBJECT success"<<endl;
     LEDcallback LED1;
+	std::cout<<"LED OBJECT success"<<endl;
      bh1750test.setCallback(&LED1);
-     bh1750test.setworkmode(continue_r2); 
+     bh1750test.setworkmode(Continue_H_M2); 
      bh1750test.start();
      do {
 	 sleep(1);
