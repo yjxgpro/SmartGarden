@@ -11,7 +11,7 @@ BH1750::BH1750(BH1750DeviceSettings bh1750deviceSettings)
 {
     device = bh1750deviceSettings;
 #ifdef DEBUG
-    fprintf(stderr, "I2c: bus=%02x, BH1750Addr=%02x\n", device.i2c_bus, device.BHAddress);
+    fprintf(stderr, "I2c: bus=%02x, BH1750Addr=%02x\n", device.i2c_bus, device.BH1750Addr);
 #endif
     BH1750initgpio();
     BH1750WriteByte(Poweron);
@@ -50,7 +50,6 @@ void BH1750::start()
 {
     if (USThread)
     {
-        std::cout << "thread already running" << endl;
         return;
     }
         RecFlag = false;  //Not calculate light until receive correct data
@@ -59,7 +58,6 @@ void BH1750::start()
 
 void BH1750::run(BH1750 *BH1750) 
 {
-     std::cout << "create thread success" << endl;
      BH1750->BH1750WriteWorkMode(currentworkmode);
     gpioSetTimerFuncEx(Timer0, Reci2cDataPeriod, reinterpret_cast<gpioTimerFuncEx_t>(BH1750::gpioTimercallFuc), BH1750);
     if(RecFlag)
@@ -107,7 +105,7 @@ float BH1750::lightcal(uint8_t *buf)
         std::cout << "current Resolution = 0.5lx" << endl;
         printf("%.2f", flight);
         break;
-    case Continue_H_M3:
+    case Continue_L_M3:
         flight = (buf[0] * 256 + buf[1]) * 4.0 / 1.2;
         std::cout << "current Resolution = 4lx" << endl;
         printf("%.2f", flight);
@@ -160,7 +158,7 @@ int BH1750::BH1750WriteByte(uint8_t command)
    }
    else{
       std::cout << "Write One byte Success" << endl;
-      return 0
+      return 0 ;
    }
     
 }
@@ -173,7 +171,7 @@ int BH1750::BH1750WriteWorkMode(uint8_t workmode)
 #ifdef DEBUG
         fprintf(stderr, "Could not read");
 #endif
-       return -1
+       return -1 ;
     }
     else
     {

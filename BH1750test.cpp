@@ -22,15 +22,13 @@ class LEDcallback : public BH1750callback
 
 int main(int argc, char *argv[]) {
     BH1750 bh1750test;
-	std::cout<<"BH1750 OBJECT success"<<endl;
     LEDcallback LED1;
-	std::cout<<"LED OBJECT success"<<endl;
      bh1750test.setCallback(&LED1);
      bh1750test.setworkmode(Continue_H_M2); 
      bh1750test.start();
      do {
-	 sleep(1);
-     } while (getchar() < 10);
+	 time_sleep(1);
+     } while (getchar() < 2);
      bh1750test.stop();
      exit(EXIT_SUCCESS);
 }

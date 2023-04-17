@@ -66,6 +66,8 @@ struct BH1750DeviceSettings
 	uint8_t i2c_bus = BH1750_DEFAULT_I2C_BUS;
 	// BH1750 data register address, BH1750 has only one register 
 	uint8_t BH1750RegAddr = BH1750_DEFAULT_I2C_BUS;
+	// BH1750 GPIOInit Flag
+	bool initPIGPIO = true;
 };
 
 /**
@@ -119,7 +121,6 @@ public:
 	void setCallback(BH1750callback *cb)
 	{ //  callback接口
 		BH1750Callback = cb;
-		std::cout << "set callback success" << endl;
 	}
 
     //! \brief when object is killed, kill thread.
@@ -170,7 +171,7 @@ private:
 	      -1   write wrong data, not 1 byte
 	       0   write right data, 1 byte
     **/
-	int BH1750::BH1750WriteByte(uint8_t command)
+	int BH1750::BH1750WriteByte(uint8_t command);
 
     /**
     \brief user can setup BH1750 workmode in this Fuc
