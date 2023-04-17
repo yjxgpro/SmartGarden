@@ -17,24 +17,30 @@ using namespace std;
 
 #define PI 3.14159265
 
+#define gpioPinFan 17 // Enable signal for fan motor, set 1 for on, 0 for off
+#define gpioIN3 22 // VDD pin for fan motor, keep at 1
+#define gpioIN4 27 // GND pin for fan motor, keep at 0
+#define gpioPin1 23 // PWM control signal for yaw servo
+#define gpioPin2 24 // PWM control signal for pitch servo
+
 // Driver class for two servos and a DC fan motor.
 class Servo {
 
 public:
     Servo(){
-        servo.servoInit(servo.gpioPin1);
-        servo.servoInit(servo.gpioPin2);
+        servoInit(gpioPin1);
+        servoInit(gpioPin2);
     }
     // Initiate the threads for two servos
     thread thread1;
     thread thread2;
     
     // Define the pigpio pinout for each component
-    int gpioPinFan = 4; // Enable signal for fan motor, set 1 for on, 0 for off
-    int gpioIN3 = 27; // VDD pin for fan motor, keep at 1
-    int gpioIN4 = 22; // GND pin for fan motor, keep at 0
-    int gpioPin1 = 17; // PWM control signal for yaw servo
-    int gpioPin2 = 18; // PWM control signal for pitch servo
+    //int gpioPinFan = 17; // Enable signal for fan motor, set 1 for on, 0 for off
+    //int gpioIN3 = 22; // VDD pin for fan motor, keep at 1
+    //int gpioIN4 = 27; // GND pin for fan motor, keep at 0
+    //int gpioPin1 = 23; // PWM control signal for yaw servo
+    //int gpioPin2 = 24; // PWM control signal for pitch servo
 
     /* Member function to calculate servo angles based on given 2-D coordinates. A few assumption are made
     since the coordinates are only 2-D (depth info is missing): 
