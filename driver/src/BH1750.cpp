@@ -63,13 +63,13 @@ void BH1750::run(BH1750 *BH1750)
     if(RecFlag)
     {
         RecFlag = false;
-        real_lightvalue = BH1750->lightcal(BH1750_buf); // 获取真实的光强值
+        real_lightvalue = BH1750->lightcal(BH1750_buf);
         BH1750_buf[0]=0;
         BH1750_buf[1]=0;
         BH1750->BH1750dataready();
         } 
     else {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100)); // 等待 1 秒钟再重试
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
         }
 }
 
