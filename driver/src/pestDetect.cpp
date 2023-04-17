@@ -49,7 +49,8 @@ void Camera::detect()
         QByteArray datagram(reinterpret_cast<const char*>(buffer.data()), buffer.size());
         udpSocket.writeDatagram(datagram, host, port);
         //imshow("cam", img);
-
+        
+        GaussianBlur(img, img, Size(5, 5), 0, 0);
         pMOG2->apply(img, bsmMOG2, 0.005);
 
         morphologyEx(bsmMOG2, bsmMOG2, MORPH_OPEN, kernel);
