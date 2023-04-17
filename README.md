@@ -15,4 +15,4 @@ This project is being completed for Real Time Embedded Programming 5 at the Univ
 
 <img src="https://user-images.githubusercontent.com/122289736/232348150-550da4d3-aa1f-41c0-8094-5f6b38d0690f.png" alt="youtubelogo" width="50" height="35"/>YouTube: https://www.youtube.com/@SmartGarden-re8xc/featured
 
-## Technologies
+
