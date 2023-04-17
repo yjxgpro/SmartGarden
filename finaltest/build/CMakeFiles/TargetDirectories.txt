@@ -1,3 +1,0 @@
-/home/pi/final/build/CMakeFiles/rebuild_cache.dir
-/home/pi/final/build/CMakeFiles/edit_cache.dir
-/home/pi/final/build/CMakeFiles/MyExecutable.dir
