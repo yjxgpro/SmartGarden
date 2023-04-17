@@ -5,9 +5,8 @@ using namespace std;
 class LEDcallback : public BH1750callback
 {
     public:
-	 void hasSample(float lightvalue) {
-		//根据不同的光照强度，PWM输出
-		//test 就可以使用
+	 void hasSample(float lightvalue)
+	 {
 		float lightneed = 0;
 		if(lightvalue>EnoughLight) 
 		std::cout<<"Enough Light"<<endl;
