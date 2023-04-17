@@ -1,0 +1,1 @@
+/usr/bin/c++ -rdynamic CMakeFiles/l298n_test.dir/main.cpp.o -o l298n_test  -lpigpio 
