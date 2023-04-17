@@ -27,9 +27,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     Camera camera;
-    Servo servo;
-    servo.servoInit(servo.gpioPin1);
-    servo.servoInit(servo.gpioPin2);
+    //Servo servo;
+    //servo.servoInit(servo.gpioPin1);
+    //servo.servoInit(servo.gpioPin2);
     ServoSampleCallback servoSampleCallback;
     camera.registerCallback(&servoSampleCallback);
     camera.detect();
