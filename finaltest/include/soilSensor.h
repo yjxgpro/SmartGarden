@@ -7,6 +7,9 @@
 #include <iostream>
 using namespace std;
 
+#define GPIO_SOILSENSOR 18
+
+
 class SoilSensor 
 {
     private:
@@ -27,4 +30,3 @@ class SoilSensor
 };
 
 #endif
-

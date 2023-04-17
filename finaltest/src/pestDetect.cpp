@@ -1,11 +1,16 @@
 #include "camera.h"
+#include "servo.h"
+#include <QUdpSocket>
+#include <QByteArray>
 
 
-void Camera::registerCallback(ServoCallback* cb) {
+void Camera::registerCallback(ServoCallback* cb) 
+{
     sCallback = cb;
 }
 
-void Camera::detect() {
+void Camera::detect() 
+{
     int pos[2];
     VideoCapture cam(0);
     if (!cam.isOpened()) {
@@ -15,6 +20,10 @@ void Camera::detect() {
     }
 
     cout << "cam open success!" << endl;
+     QUdpSocket udpSocket;
+    QHostAddress host("192.168.137.1"); // 主机的IP地址
+    quint16 port = 22222; // 主机端口
+    cout << "Genshin no.1" << endl;
     //namedWindow("cam");
     //namedWindow("cam", WINDOW_NORMAL);
     //resizeWindow("cam", 640, 480);
@@ -34,7 +43,16 @@ void Camera::detect() {
     for (;;) {
         cam.read(img);
         if (img.empty()) break;
+         cam >> img;
 
+        // 将帧转换为JPEG格式
+        std::vector<uchar> buffer;
+        std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 80 };
+        cv::imencode(".jpg", img, buffer, params);
+
+        // 将JPEG数据发送到主机
+        QByteArray datagram(reinterpret_cast<const char*>(buffer.data()), buffer.size());
+        udpSocket.writeDatagram(datagram, host, port);
         //imshow("cam", img);
 
         pMOG2->apply(img, bsmMOG2, 0.005);
@@ -75,6 +93,8 @@ void Camera::detect() {
     }
 
         
-};
+}
+
+
 
 

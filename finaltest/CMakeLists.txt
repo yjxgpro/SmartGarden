@@ -6,29 +6,32 @@ project(smartgarden)
 find_package(Threads REQUIRED)
 find_package(OpenCV REQUIRED)
 find_library(PIGPIO_LIB pigpio REQUIRED)
+find_package(Qt5 COMPONENTS Core Network REQUIRED)
 
 
 include_directories(include)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Add executable
-add_executable(MyExecutable 
+add_executable(smartgarden 
     src/main.cpp
-    # include/camera.h
     src/pestDetect.cpp
-    src/Servo_new.cpp
+    src/servo.cpp
     src/soilSensor.cpp
 )
 
 # Add include directories
-target_include_directories(MyExecutable PRIVATE
+target_include_directories(smartgarden PRIVATE
     # Add any necessary include directories here
     ${OpenCV_INCLUDE_DIRS}
 )
 
 # Add any necessary libraries here
-target_link_libraries(MyExecutable PRIVATE
+target_link_libraries(smartgarden PRIVATE
     # Add any necessary libraries here
     Threads::Threads
     ${OpenCV_LIBS}
-    ${PIGPIO_LIB}
+    ${PIGPIO_LIB} 
+    Qt5::Core Qt5::Network
 )
+
