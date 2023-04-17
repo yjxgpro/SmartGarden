@@ -18,6 +18,7 @@ add_executable(smartgarden
     src/pestDetect.cpp
     src/servo.cpp
     src/soilSensor.cpp
+    src/BH1750.cpp
 )
 
 # Add include directories
@@ -34,4 +35,3 @@ target_link_libraries(smartgarden PRIVATE
     ${PIGPIO_LIB} 
     Qt5::Core Qt5::Network
 )
-
