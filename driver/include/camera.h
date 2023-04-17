@@ -1,3 +1,10 @@
+/******************************************************************************
+Author: Yucheng Xiao, 2740379x@student.gla.ac.uk
+This file prototypes the Camera and ServoCallback class, implemented in pestDetect.cpp. 
+pest detecting is a part function of Project "SmartGarden",
+please click https://github.com/yjxgpro/SmartGarden.git see more.
+******************************************************************************/
+
 #include <opencv2/opencv.hpp>
 #include <iostream>
 
