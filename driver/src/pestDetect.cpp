@@ -20,13 +20,10 @@ void Camera::detect()
     }
 
     cout << "cam open success!" << endl;
-     QUdpSocket udpSocket;
-    QHostAddress host("192.168.137.1"); // 主机的IP地址
-    quint16 port = 22222; // 主机端口
+    QUdpSocket udpSocket;
+    QHostAddress host("192.168.137.1");
+    quint16 port = 22222;
     cout << "Genshin no.1" << endl;
-    //namedWindow("cam");
-    //namedWindow("cam", WINDOW_NORMAL);
-    //resizeWindow("cam", 640, 480);
     Mat img;
 
     Mat kernel = getStructuringElement(MORPH_RECT, Size(3, 3), Point(-1, -1));
@@ -45,12 +42,10 @@ void Camera::detect()
         if (img.empty()) break;
          cam >> img;
 
-        // 将帧转换为JPEG格式
         std::vector<uchar> buffer;
         std::vector<int> params = { cv::IMWRITE_JPEG_QUALITY, 80 };
         cv::imencode(".jpg", img, buffer, params);
 
-        // 将JPEG数据发送到主机
         QByteArray datagram(reinterpret_cast<const char*>(buffer.data()), buffer.size());
         udpSocket.writeDatagram(datagram, host, port);
         //imshow("cam", img);
