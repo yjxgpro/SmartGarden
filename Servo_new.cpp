@@ -21,7 +21,10 @@ using namespace std;
 class Servo {
 
 public:
-    Servo(){}
+    Servo(){
+        servo.servoInit(servo.gpioPin1);
+        servo.servoInit(servo.gpioPin2);
+    }
     // Initiate the threads for two servos
     thread thread1;
     thread thread2;
